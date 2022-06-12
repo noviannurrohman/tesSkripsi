@@ -211,7 +211,7 @@
                              <div class="footer-tittle">
                                  <h4>About Us</h4>
                                  <div class="footer-pera">
-                                     <p>Heaven frucvitful doesn't cover lesser dvsays appear creeping seasons so behold.</p>
+                                     <p>E - Job Vacancy is a information system that makes it easier for polynema students to find jobs according to their skills.</p>
                                 </div>
                              </div>
                          </div>
@@ -224,11 +224,10 @@
                                 <h4>Contact Info</h4>
                                 <ul>
                                     <li>
-                                    <p>Address :Your address goes
-                                        here, your demo address.</p>
+                                    <p>Address : Jl. Soekarno Hatta No.9, Jatimulyo, Kec. Lowokwaru, Kota Malang, Jawa Timur 65141.</p>
                                     </li>
-                                    <li><a href="#">Phone : +8880 44338899</a></li>
-                                    <li><a href="#">Email : info@colorlib.com</a></li>
+                                    <li><a href="#">Phone : (0341) 404424</a></li>
+                                    <li><a href="#">Email : cs@polinema.ac.id</a></li>
                                 </ul>
                             </div>
 
@@ -276,18 +275,18 @@
                     </div>
                 </div>
                <!--  -->
-               <div class="row footer-wejed justify-content-between">
+               <!-- <div class="row footer-wejed justify-content-between">
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
-                        <!-- logo -->
+                        
                         <div class="footer-logo mb-20">
                         <a href="<?= base_url('dashboard'); ?>"><img src="<?= base_url('assets/'); ?>img/logo/logojob.png" style="width: 199px;" alt=""></a>
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-5 custom-titlefooter">
-                    <div class="footer-tittle-bottom">
-                        <span>5000+</span>
-                        <p>Talented Hunter</p>
-                    </div>
+                        <div class="footer-tittle-bottom">
+                            <span>5000+</span>
+                            <p>Talented Hunter</p>
+                        </div>
                     </div>
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-5 custom-titlefooter">
                         <div class="footer-tittle-bottom">
@@ -296,13 +295,13 @@
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-5 custom-titlefooter">
-                        <!-- Footer Bottom Tittle -->
+                      
                         <div class="footer-tittle-bottom">
                             <span>568</span>
                             <p>Talented Hunter</p>
                         </div>
                     </div>
-               </div>
+               </div> -->
             </div>
         </div>
         <!-- footer-bottom area -->

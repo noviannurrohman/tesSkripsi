@@ -54,6 +54,7 @@
                                 <th>Applicant's Name</th>
                                 <!-- <th>Username</th> -->
                                 <th>CV</th>
+                                <th>Detail Pelamar</th>
                                 <th>Status</th>
                                 <!-- <th>No. telp</th> -->
                                 <!-- <th>Role</th> -->
@@ -74,6 +75,7 @@
                                         <?php echo "<script>console.log('" . json_encode($data) . "');</script>"; ?>
                                         <td><?= $data->nama; ?></td>
                                         <td><a href="<?= base_url('assets/upload/cv/'.$data->resume) ?>" target="_blank"><?= $data->resume ?></a></td>
+                                        <td><a href="<?= base_url('assets/upload/sertifikat/'.$data->sertifikat) ?>" target="_blank"><?= $data->sertifikat ?></a></td>
                                         <td>
                                             <?php /*ucwords($data->status_daftar); */
                                                 if ($data->status_daftar == '1') {
@@ -92,6 +94,7 @@
                                         </td>
                                         <!-- <td><?= $user['no_telp']; ?></td>
                                         <td><?= $user['role']; ?></td> -->
+                                        
                                         <td>
                                             <!-- <a href="<?= base_url('admin/company/detail_company/') . $data->id ?>" class="btn btn-circle btn-sm btn-detail">
                                                 <i class="fa fa-info"></i>

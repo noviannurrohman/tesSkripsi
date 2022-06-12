@@ -12,6 +12,16 @@ class M_Student extends CI_Model{
     //     return $this->db->insert($this->mahasiswa, $this);
     // }
 
+    public function get($id = null)
+    {
+        $this->db->select('*');
+        $this->db->from('mahasiswa');
+        if ($id != null) {
+            $this->db->where('id', $id);
+        }
+        $query = $this->db->get();
+        return $query;
+    }
     
 	function add_student($table,$data){
 		return $this->db->insert($table,$data);

@@ -76,7 +76,7 @@ class Profile extends CI_Controller {
         $this->form_validation->set_rules('jenjang', 'Jenjang', 'required|trim');
         $this->form_validation->set_rules('jurusan', 'Jurusan', 'required|trim');
         $this->form_validation->set_rules('program_studi', 'Program Studi', 'required|trim');
-        $this->form_validation->set_rules('ipk', 'IPK', 'required|trim');
+        $this->form_validation->set_rules('ipk', 'IPK', 'required|trim'); 
         $this->form_validation->set_rules('tahun_lulus', 'Tahun Lulus', 'required|trim');
         $this->form_validation->set_rules('jenis_kelamin', 'Jenis Kelamin', 'required|trim');
         $this->form_validation->set_rules('resume', 'Resume', 'required|trim');
@@ -93,92 +93,69 @@ class Profile extends CI_Controller {
             $id_skill = $id_skill.",".$a;
         }
         $id_skill1 = substr($id_skill, 1);
-        if ($_FILES['resume']['name'] == "") {
-            $input_data = [
-                'id'                            => $this->input->post('id'),
-                'nim'                           => $this->input->post('nim'),
-                'nama'                          => $this->input->post('nama'),
-                'tanggal_lahir'                 => $this->input->post('tanggal_lahir'),
-                'alamat'                        => $this->input->post('alamat'),
-                'kota'                          => $this->input->post('kota'),
-                'no_hp'                         => $this->input->post('no_hp'),
-                'email'                         => $this->input->post('email'),
-                'jenjang'                       => $this->input->post('jenjang'),
-                'jurusan'                       => $this->input->post('jurusan'),
-                'program_studi'                 => $this->input->post('program_studi'),
-                'ipk'                           => $this->input->post('ipk'),
-                'tahun_lulus'                   => $this->input->post('tahun_lulus'),
-                'jenis_kelamin'                 => $this->input->post('jenis_kelamin'),
-                'id_skill'                      => $id_skill1,
-            ];
-        } else {
-            $this->_config();
-            $input_data = [
-                'id'                            => $this->input->post('id'),
-                'nim'                           => $this->input->post('nim'),
-                'nama'                          => $this->input->post('nama'),
-                'tanggal_lahir'                 => $this->input->post('tanggal_lahir'),
-                'alamat'                        => $this->input->post('alamat'),
-                'kota'                          => $this->input->post('kota'),
-                'no_hp'                         => $this->input->post('no_hp'),
-                'email'                         => $this->input->post('email'),
-                'jenjang'                       => $this->input->post('jenjang'),
-                'jurusan'                       => $this->input->post('jurusan'),
-                'program_studi'                 => $this->input->post('program_studi'),
-                'ipk'                           => $this->input->post('ipk'),
-                'tahun_lulus'                   => $this->input->post('tahun_lulus'),
-                'jenis_kelamin'                 => $this->input->post('jenis_kelamin'),
-                'id_skill'                      => $id_skill1,
-                'resume'                        => $_FILES['resume']['name'],
-            ];
-        }
+        $input_data = [
+            'id'                            => $this->input->post('id'),
+            'nim'                           => $this->input->post('nim'),
+            'nama'                          => $this->input->post('nama'),
+            'tanggal_lahir'                 => $this->input->post('tanggal_lahir'),
+            'alamat'                        => $this->input->post('alamat'),
+            'kota'                          => $this->input->post('kota'),
+            'no_hp'                         => $this->input->post('no_hp'),
+            'email'                         => $this->input->post('email'),
+            'jenjang'                       => $this->input->post('jenjang'),
+            'jurusan'                       => $this->input->post('jurusan'),
+            'program_studi'                 => $this->input->post('program_studi'),
+            'ipk'                           => $this->input->post('ipk'),
+            'tahun_lulus'                   => $this->input->post('tahun_lulus'),
+            'jenis_kelamin'                 => $this->input->post('jenis_kelamin'),
+            'id_skill'                      => $id_skill1,
+        ];
 
         $userdata = [
             'id_skill' => $id_skill1,
         ];
         $this->session->set_userdata('userLogCp', 'student');
         $this->session->set_userdata($userdata);
-        //echo json_encode($input_data);
-        if (empty($_FILES['resume']['name'])) {
-            $insert = $this->Student->update('mahasiswa', 'id', $input_data['id'], $input_data);
-            if ($insert) {
-                set_pesan('perubahan data berhasil disimpan.', 'student/profile/');
-                //echo json_encode($input_data);
-            } else {
-                set_pesan('perubahan data tidak disimpan.', 'student/profile/setting'.$userId);
-            }
-            //echo $_FILES['resume'];
-            set_pesan('Insert The Resume.', 'student/profile/setting'.$userId);
-        } else {
-            if ($this->upload->do_upload('resume') == false) {
-                echo $this->upload->display_errors();
-                die;
-            } else {
-                $this->session->unset_userdata('foto_admin');
-                $datacv = $this->Student->getStudent('mahasiswa', ['id' => $id]);
-                if ($datacv['resume'] != '') {
-                    $old_image = FCPATH . 'assets/upload/cv/' . $datacv['resume'];
-                    if (!unlink($old_image)) {
-                        set_pesan('gagal hapus cv lama.', 'student/profile/'.$userId); 
-                        //echo json_encode($input_data);
-                        //$this->session->set_userdata('foto_admin', $datacv['resume']);
-                    }
-                }
 
-                $input_data['resume'] = $this->upload->data('file_name');
-                $update = $this->Student->update('mahasiswa', 'id', $input_data['id'], $input_data);
-                if ($update) {
-                    set_pesan('perubahan resume berhasil disimpan .', 'student/profile/'); 
-                    //$this->session->set_userdata('foto_mahasiswa', $datacv['resume']);
-                    //echo json_encode($input_data);
-                } else {
-                    set_pesan('gagal resume menyimpan perubahan.', 'student/profile/setting'.$userId); 
-                    //echo json_encode($input_data);
-                }
-                set_pesan('Ada Kesalahan pada resume', 'student/profile/setting'.$userId); 
-                //echo json_encode($input_data);
+        if($_FILES['resume']['name'] != null){
+            $uploadCV = $this->upload_cv('resume');
+            if($uploadCV['status'] == true){
+                $input_data['resume'] = $uploadCV['link'];
+            }else{
+                // set_pesan('Error Form Validation.', 'student/profile/setting'.$userId);
+                $this->session->set_flashdata('err_msg', $uploadCV['msg']);
+                redirect(base_url("student/profile/setting"));
             }
         }
+
+        if($_FILES['files']['name'][0] != null){
+            $uploadSertif = $this->upload_sertif('files');
+            if($uploadSertif['status'] == true){
+                $input_data['sertifikat'] = $uploadSertif['link'];
+            }else{
+                // set_pesan('Error Form Validation.', 'student/profile/setting'.$userId);
+                $this->session->set_flashdata('err_msg', $uploadSertif['msg']);
+                redirect(base_url("student/profile/setting"));
+            }
+        }
+
+        // print_r($_POST);
+        // print_r("Tes"-);
+        
+        $this->Student->update('mahasiswa', 'id', $input_data['id'], $input_data);
+        $this->session->set_flashdata('succ_msg', 'Data Berhasil Dismpan');
+        redirect(base_url("student/profile/setting"));
+
+        // $userdata = [
+        //     'id_skill' => $id_skill1,
+        // ];
+        // $this->session->set_userdata('userLogCp', 'student');
+        // $this->session->set_userdata($userdata);       
+
+        
+        // if($uploadFoto->){
+
+        // }
         
         // if ($this->form_validation->run() == false) {
         //     //redirect(base_url("student/profile/setting"));
@@ -187,5 +164,73 @@ class Profile extends CI_Controller {
         // } else {
             
         // }
+    }
+    public function upload_cv($resource)
+    {
+        $this->load->library('upload');
+        $path = 'assets/upload/cv';
+        $conf['upload_path']    = $path;
+        $conf['allowed_types']  = "pdf";
+        $conf['max_size']       = 2048;
+
+        $this->upload->initialize($conf);
+        if ($this->upload->do_upload($resource)) {
+            $cv = $this->upload->data();
+            return [
+                'status' => true,
+                'msg'   => 'Data berhasil terupload',
+                'link'  => $cv['file_name']
+            ];
+        } else {
+            return [
+                'status' => false,
+                'msg'   => $this->upload->display_errors(),
+            ];
+        }
+    }
+    public function upload_sertif($resource)
+    {
+        $this->load->library('upload');
+        // var_dump($_FILES[$resource]['name']);
+        // die;
+            $path = 'assets/upload/sertifikat';
+            $config['upload_path'] = $path;
+            $config['allowed_types'] = 'pdf';
+            $config['max_size'] = '2048';
+            $sertif = [] ;
+            $files = $_FILES[$resource];
+
+            $this->upload->initialize($config);
+
+            foreach ($files['name'] as $key => $image) {
+                $_FILES['files[]']['name'] = $files['name'][$key];
+                $_FILES['files[]']['type'] = $files['type'][$key];
+                $_FILES['files[]']['tmp_name'] = $files['tmp_name'][$key];
+                $_FILES['files[]']['error'] = $files['error'][$key];
+                $_FILES['files[]']['size'] = $files['size'][$key];
+
+                $fileName = $image;
+
+                $images[] = $fileName;
+
+                $config['file_name'] = $fileName;
+
+                $this->upload->initialize($config);
+
+                if ($this->upload->do_upload('files[]')) {
+                    $img = $this->upload->data();
+                    array_push($sertif, $img['file_name']);
+                } else {
+                    return [
+                        'status' => true,
+                        'msg'   => $this->upload->display_errors(),
+                    ];
+                }
+            }
+            return [
+                'status' => true,
+                'msg'   => 'Data berhasil terupload',
+                'link'  => implode(';', $sertif)
+            ];
     }
 }
