@@ -125,11 +125,11 @@
     <div class="card-body" style="padding: 2rem 17.25rem 3rem 17.25rem;">
 
         <?= $this->session->flashdata('pesan'); ?>
-        <?php if($this->session->flashdata('succ_msg')){?>
-            <div class="alert alert-success"><?= $this->session->flashdata('succ_msg')?></div>
-        <?php }else if($this->session->flashdata('err_msg')){?>
-                <div class="alert alert-danger"><?= $this->session->flashdata('err_msg')?></div>
-        <?php }?>
+        <?php if ($this->session->flashdata('succ_msg')) { ?>
+            <div class="alert alert-success"><?= $this->session->flashdata('succ_msg') ?></div>
+        <?php } else if ($this->session->flashdata('err_msg')) { ?>
+            <div class="alert alert-danger"><?= $this->session->flashdata('err_msg') ?></div>
+        <?php } ?>
 
         <!-- <?= form_open_multipart('', [], ['id' => $mahasiswa['id']]); ?> -->
         <form action="<?php echo base_url('student/profile/edit_student/') ?>" class="form" method="post" enctype="multipart/form-data">
@@ -414,7 +414,7 @@
                             $html = "";
                             foreach ($arrSertif as $sertif) {
                                 $html .= '<a href="' . base_url() . 'assets/upload/sertifikat/' . $sertif . '" style="color: blue;">' . $sertif .  '</a>';
-                            } 
+                            }
                             echo $html;
                         } ?>
                         <div class="col-9">

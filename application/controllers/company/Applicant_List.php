@@ -1,45 +1,61 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Applicant_List extends CI_Controller {
+class Applicant_List extends CI_Controller
+{
 
     public function __construct()
     {
         parent::__construct();
         $this->load->library('form_validation');
-        $this->load->model('M_Company','Company');
+        $this->load->model('M_Company', 'Company');
+        $this->load->model('M_Student', 'Student');
     }
 
     public function index()
-    {           
+    {
         $data['applicant'] = $this->Company->joinApplicant(['perusahaan.id' => $this->session->userdata('id_perusahaan')])->result();
         $this->load->view('company/layout/header');
         $this->load->view('company/applicantlist/index', $data);
         $this->load->view('company/layout/footer');
     }
 
-    public function apply($idLowongan, $idMember)
-	{
-		$data['userMasuk'] = $this->data;
-		if ($data['userMasuk'][0]->level != 2) {
-			$this->session->set_flashdata('acl', 'Silahkan Login Dahulu!!!!!');
-			redirect('login');
-		}
-		$upload = $this->lowongan->uploadCV();
-		if ($upload['result']=='success') {
-			$this->lowongan->apply($idLowongan, $idMember, $upload);
-			$this->session->set_flashdata('applied', 'Anda Telah Berhasil Apply Pekerjaan '.$lowongan[0]->lowongan);
-			redirect('home');
-		} else {
-			$data['lowongan'] = $this->lowongan->getLowongan($idLowongan);
-			$data['lowonganTerkait'] = $this->lowongan->getLowongan('', $idLowongan, $data['lowongan'][0]->fkKategori);
-			$data['pendaftar'] = $this->lowongan->getPendaftar();
-			$data['error'] = $upload['error'];
-			$this->load->view('home/single', $data);
-		}
-	}
+    public function detail($id_mahasiswa)
+    {
+        $mahasiswa = $this->Student->get($id_mahasiswa)->row();
+        $sertif = $this->Student->get($id_mahasiswa)->result();
+        // $skill = $this->Student->skill($id_mahasiswa)->result();
+        $data = array(
+            'mahasiswa' => $mahasiswa,
+            'sertif' => $sertif,
+        );
+        $this->load->view('company/layout/header');
+        $this->load->view('company/detail/detail', $data);
+        $this->load->view('company/layout/footer');
+    }
 
-	public function toggle($id)
+    public function apply($idLowongan, $idMember)
+    {
+        $data['userMasuk'] = $this->data;
+        if ($data['userMasuk'][0]->level != 2) {
+            $this->session->set_flashdata('acl', 'Silahkan Login Dahulu!!!!!');
+            redirect('login');
+        }
+        $upload = $this->lowongan->uploadCV();
+        if ($upload['result'] == 'success') {
+            $this->lowongan->apply($idLowongan, $idMember, $upload);
+            $this->session->set_flashdata('applied', 'Anda Telah Berhasil Apply Pekerjaan ' . $lowongan[0]->lowongan);
+            redirect('home');
+        } else {
+            $data['lowongan'] = $this->lowongan->getLowongan($idLowongan);
+            $data['lowonganTerkait'] = $this->lowongan->getLowongan('', $idLowongan, $data['lowongan'][0]->fkKategori);
+            $data['pendaftar'] = $this->lowongan->getPendaftar();
+            $data['error'] = $upload['error'];
+            $this->load->view('home/single', $data);
+        }
+    }
+
+    public function toggle($id)
     {
         $status = $this->Base->getStudent('mahasiswa', ['id' => $id])['is_active'];
         $toggle = $status ? 0 : 1; //Jika user aktif maka nonaktifkan, begitu pula sebaliknya
@@ -114,5 +130,4 @@ class Applicant_List extends CI_Controller {
         }
         redirect('company/applicant_list/');
     }
-    
 }

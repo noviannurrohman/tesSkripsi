@@ -1,31 +1,29 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Profile extends CI_Controller {
+class Profile extends CI_Controller
+{
 
     protected $user;
-    
+
     public function __construct()
     {
         parent::__construct();
         $this->load->library('form_validation');
         $this->load->model('M_student', 'Student');
-        
+
         $username = $this->session->userdata('nim');
         $this->user = $this->Student->getStudent('mahasiswa', ['nim' => $username]);
 
-        if ($this->session->userdata['logged'] == TRUE)
-        {
+        if ($this->session->userdata['logged'] == TRUE) {
             //do something
-        }
-        else
-        {
+        } else {
             redirect('student/login'); //if session is not there, redirect to login page
         }
     }
 
     public function index()
-    {         
+    {
         $data['title'] = "Profile";
         $data['mahasiswa'] = $this->user;
         $username = $this->session->userdata('nim');
@@ -40,6 +38,7 @@ class Profile extends CI_Controller {
         $data['title'] = "Profile";
         $data['mahasiswa'] = $this->user;
         $username = $this->session->userdata('nim');
+        $data['sertif'] = $this->Student->getSertif($this->session->userdata('id'))->result();
         //$data['skills'] = $this->Student->joinSkill(['mahasiswa.nim' => $username])->result_array();
         $data['skills'] = $this->Student->getTable('skill');
         // $this->load->view('layout/header');
@@ -48,7 +47,7 @@ class Profile extends CI_Controller {
 
     public function _config()
     {
-        $config['upload_path']      = FCPATH.".\assets\upload\cv";
+        $config['upload_path']      = FCPATH . ".\assets\upload\cv";
         $config['allowed_types']    = 'pdf';
         $config['encrypt_name']     = FALSE;
         $config['max_size']         = '10240';
@@ -76,7 +75,7 @@ class Profile extends CI_Controller {
         $this->form_validation->set_rules('jenjang', 'Jenjang', 'required|trim');
         $this->form_validation->set_rules('jurusan', 'Jurusan', 'required|trim');
         $this->form_validation->set_rules('program_studi', 'Program Studi', 'required|trim');
-        $this->form_validation->set_rules('ipk', 'IPK', 'required|trim'); 
+        $this->form_validation->set_rules('ipk', 'IPK', 'required|trim');
         $this->form_validation->set_rules('tahun_lulus', 'Tahun Lulus', 'required|trim');
         $this->form_validation->set_rules('jenis_kelamin', 'Jenis Kelamin', 'required|trim');
         $this->form_validation->set_rules('resume', 'Resume', 'required|trim');
@@ -89,10 +88,11 @@ class Profile extends CI_Controller {
         //$input = $this->input->post(null, true);
         $values = $_POST['id_skill'];
 
-        foreach ($values as $a){
-            $id_skill = $id_skill.",".$a;
+        foreach ($values as $a) {
+            $id_skill = $id_skill . "," . $a;
         }
         $id_skill1 = substr($id_skill, 1);
+
         $input_data = [
             'id'                            => $this->input->post('id'),
             'nim'                           => $this->input->post('nim'),
@@ -117,22 +117,22 @@ class Profile extends CI_Controller {
         $this->session->set_userdata('userLogCp', 'student');
         $this->session->set_userdata($userdata);
 
-        if($_FILES['resume']['name'] != null){
+        if ($_FILES['resume']['name'] != null) {
             $uploadCV = $this->upload_cv('resume');
-            if($uploadCV['status'] == true){
+            if ($uploadCV['status'] == true) {
                 $input_data['resume'] = $uploadCV['link'];
-            }else{
+            } else {
                 // set_pesan('Error Form Validation.', 'student/profile/setting'.$userId);
                 $this->session->set_flashdata('err_msg', $uploadCV['msg']);
                 redirect(base_url("student/profile/setting"));
             }
         }
 
-        if($_FILES['files']['name'][0] != null){
+        if ($_FILES['files']['name'][0] != null) {
             $uploadSertif = $this->upload_sertif('files');
-            if($uploadSertif['status'] == true){
+            if ($uploadSertif['status'] == true) {
                 $input_data['sertifikat'] = $uploadSertif['link'];
-            }else{
+            } else {
                 // set_pesan('Error Form Validation.', 'student/profile/setting'.$userId);
                 $this->session->set_flashdata('err_msg', $uploadSertif['msg']);
                 redirect(base_url("student/profile/setting"));
@@ -141,7 +141,7 @@ class Profile extends CI_Controller {
 
         // print_r($_POST);
         // print_r("Tes"-);
-        
+
         $this->Student->update('mahasiswa', 'id', $input_data['id'], $input_data);
         $this->session->set_flashdata('succ_msg', 'Data Berhasil Dismpan');
         redirect(base_url("student/profile/setting"));
@@ -152,17 +152,17 @@ class Profile extends CI_Controller {
         // $this->session->set_userdata('userLogCp', 'student');
         // $this->session->set_userdata($userdata);       
 
-        
+
         // if($uploadFoto->){
 
         // }
-        
+
         // if ($this->form_validation->run() == false) {
         //     //redirect(base_url("student/profile/setting"));
         //     set_pesan('Error Form Validation.', 'student/profile/setting'.$userId);
         //     //echo $this->input->post('resume');
         // } else {
-            
+
         // }
     }
     public function upload_cv($resource)
@@ -193,44 +193,44 @@ class Profile extends CI_Controller {
         $this->load->library('upload');
         // var_dump($_FILES[$resource]['name']);
         // die;
-            $path = 'assets/upload/sertifikat';
-            $config['upload_path'] = $path;
-            $config['allowed_types'] = 'pdf';
-            $config['max_size'] = '2048';
-            $sertif = [] ;
-            $files = $_FILES[$resource];
+        $path = 'assets/upload/sertifikat';
+        $config['upload_path'] = $path;
+        $config['allowed_types'] = 'pdf';
+        $config['max_size'] = '2048';
+        $sertif = [];
+        $files = $_FILES[$resource];
+
+        $this->upload->initialize($config);
+
+        foreach ($files['name'] as $key => $image) {
+            $_FILES['files[]']['name'] = $files['name'][$key];
+            $_FILES['files[]']['type'] = $files['type'][$key];
+            $_FILES['files[]']['tmp_name'] = $files['tmp_name'][$key];
+            $_FILES['files[]']['error'] = $files['error'][$key];
+            $_FILES['files[]']['size'] = $files['size'][$key];
+
+            $fileName = $image;
+
+            $images[] = $fileName;
+
+            $config['file_name'] = $fileName;
 
             $this->upload->initialize($config);
 
-            foreach ($files['name'] as $key => $image) {
-                $_FILES['files[]']['name'] = $files['name'][$key];
-                $_FILES['files[]']['type'] = $files['type'][$key];
-                $_FILES['files[]']['tmp_name'] = $files['tmp_name'][$key];
-                $_FILES['files[]']['error'] = $files['error'][$key];
-                $_FILES['files[]']['size'] = $files['size'][$key];
-
-                $fileName = $image;
-
-                $images[] = $fileName;
-
-                $config['file_name'] = $fileName;
-
-                $this->upload->initialize($config);
-
-                if ($this->upload->do_upload('files[]')) {
-                    $img = $this->upload->data();
-                    array_push($sertif, $img['file_name']);
-                } else {
-                    return [
-                        'status' => true,
-                        'msg'   => $this->upload->display_errors(),
-                    ];
-                }
+            if ($this->upload->do_upload('files[]')) {
+                $img = $this->upload->data();
+                array_push($sertif, $img['file_name']);
+            } else {
+                return [
+                    'status' => true,
+                    'msg'   => $this->upload->display_errors(),
+                ];
             }
-            return [
-                'status' => true,
-                'msg'   => 'Data berhasil terupload',
-                'link'  => implode(';', $sertif)
-            ];
+        }
+        return [
+            'status' => true,
+            'msg'   => 'Data berhasil terupload',
+            'link'  => implode(';', $sertif)
+        ];
     }
 }
